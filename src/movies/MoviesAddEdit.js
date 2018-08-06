@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
 
 import Spinner from "../ui/spinner/Spinner";
-import Feedback from "../ui/feedback/Feedback";
+import Feedback, {
+  getInitialState,
+  getLoadingState,
+  getAfterLoadingState,
+  getError
+} from "../ui/feedback/Feedback";
 import MoviesService from "./MoviesService";
 
 export default class MoviesAdd extends Component {
@@ -15,11 +20,7 @@ export default class MoviesAdd extends Component {
     this.mode = navigation.getParam("mode", "");
 
     this.state = {
-      isLoading: true,
-      disableEdit: false,
-      feedback: {
-        show: false
-      },
+      ...getInitialState(),
       movie: {
         year: "1988",
         title: "",
@@ -37,11 +38,7 @@ export default class MoviesAdd extends Component {
   //TODO:  duplicate code with MovieView.js
   loadMovie() {
     if (this.year && this.title) {
-      this.setState({
-        isLoading: true,
-        disableEdit: true,
-        feedback: {}
-      });
+      this.setState(getLoadingState());
 
       this.moviesService
         .get({
@@ -50,21 +47,12 @@ export default class MoviesAdd extends Component {
         })
         .then(result => {
           this.setState({
-            isLoading: false,
-            disableEdit: false,
+            ...getAfterLoadingState(),
             movie: result.data
           });
         })
         .catch(e => {
-          this.setState({
-            isLoading: false,
-            disableEdit: false,
-            feedback: {
-              show: true,
-              title: "Error",
-              msg: e.toString()
-            }
-          });
+          this.setState(getError(e));
         });
     }
   }
@@ -106,11 +94,7 @@ export default class MoviesAdd extends Component {
   addMovie = () => {
     const movie = this.state.movie;
 
-    this.setState({
-      isLoading: true,
-      disableEdit: true,
-      feedback: {}
-    });
+    this.setState(getLoadingState());
 
     this.moviesService
       .create(movie)
@@ -128,26 +112,14 @@ export default class MoviesAdd extends Component {
         );
       })
       .catch(e => {
-        this.setState({
-          isLoading: false,
-          disableEdit: false,
-          feedback: {
-            show: true,
-            title: "Error",
-            msg: e.toString()
-          }
-        });
+        this.setState(getError(e));
       });
   };
 
   updateMovie = () => {
     const movie = this.state.movie;
 
-    this.setState({
-      isLoading: true,
-      disableEdit: true,
-      feedback: {}
-    });
+    this.setState(getLoadingState());
 
     this.moviesService
       .update(movie)
@@ -165,15 +137,7 @@ export default class MoviesAdd extends Component {
         );
       })
       .catch(e => {
-        this.setState({
-          isLoading: false,
-          disableEdit: false,
-          feedback: {
-            show: true,
-            title: "Error",
-            msg: e.toString()
-          }
-        });
+        this.setState(getError(e));
       });
   };
 

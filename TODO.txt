@@ -8,9 +8,15 @@
 
 
 
+-Paging
+
+
 - TODO
     -add/edit disable buttons while submitting
 
 - Spinners
 - Redirects
 - Feeback
+
+
+-return proper error message to client

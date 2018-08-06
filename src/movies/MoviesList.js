@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { FlatList, StyleSheet, View, Alert } from "react-native";
 
 import Spinner from "../ui/spinner/Spinner";
-import Feedback from "../ui/feedback/Feedback";
+import Feedback, {
+  getInitialState,
+  getLoadingState,
+  getAfterLoadingState,
+  getError
+} from "../ui/feedback/Feedback";
 import MoviesListItem from "./MoviesListItem";
 import MoviesService, { convertData } from "./MoviesService";
 
@@ -11,11 +16,7 @@ export default class MoviesList extends Component {
     super(props);
 
     this.state = {
-      isLoading: true,
-      disableEdit: false,
-      feedback: {
-        show: false
-      },
+      ...getInitialState(),
       movies: []
     };
 
@@ -27,11 +28,7 @@ export default class MoviesList extends Component {
   }
 
   loadMovies = () => {
-    this.setState({
-      isLoading: true,
-      disableEdit: true,
-      feedback: {}
-    });
+    this.setState(getLoadingState());
     //TODO: replace this query
     this.moviesService
       .query({
@@ -39,21 +36,12 @@ export default class MoviesList extends Component {
       })
       .then(result => {
         this.setState({
-          isLoading: false,
-          disableEdit: false,
+          ...getAfterLoadingState(),
           movies: convertData(result.data)
         });
       })
       .catch(e => {
-        this.setState({
-          isLoading: false,
-          disableEdit: false,
-          feedback: {
-            show: true,
-            title: "Error",
-            msg: e.toString()
-          }
-        });
+        this.setState(getError(e));
       });
   };
 
@@ -67,11 +55,7 @@ export default class MoviesList extends Component {
   };
 
   deleteMovie = movieToDelete => {
-    this.setState({
-      isLoading: true,
-      disableEdit: true,
-      feedback: {}
-    });
+    this.setState(getLoadingState());
 
     this.moviesService
       .remove(movieToDelete)
@@ -86,21 +70,12 @@ export default class MoviesList extends Component {
         });
 
         this.setState({
-          isLoading: false,
-          disableEdit: false,
+          ...getAfterLoadingState(),
           movies: filteredMovies
         });
       })
       .catch(e => {
-        this.setState({
-          isLoading: false,
-          disableEdit: false,
-          feedback: {
-            show: true,
-            title: "Error",
-            msg: e.toString()
-          }
-        });
+        this.setState(getError(e));
       });
   };
 
