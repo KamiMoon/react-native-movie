@@ -10,7 +10,7 @@ import Feedback, {
 } from "../ui/feedback/Feedback";
 import MoviesService from "./MoviesService";
 
-export default class MoviesAdd extends Component {
+export default class MoviesAddEdit extends Component {
   constructor(props) {
     super(props);
 
@@ -68,9 +68,6 @@ export default class MoviesAdd extends Component {
   }
 
   onChangeText = (property, text) => {
-    console.log(text);
-    console.log(property);
-
     const newState = { ...this.state };
 
     const properties = property.split(".");

@@ -8,8 +8,12 @@ export default class Feedback extends Component {
 
     return (
       <View>
-        <Text>{feedback.title}</Text>
-        <Text>{feedback.msg}</Text>
+        {feedback && (
+          <View>
+            <Text>{feedback.title}</Text>
+            <Text>{feedback.msg}</Text>
+          </View>
+        )}
       </View>
     );
   }

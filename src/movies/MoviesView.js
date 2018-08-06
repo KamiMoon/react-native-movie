@@ -10,7 +10,7 @@ import Feedback, {
 } from "../ui/feedback/Feedback";
 import MoviesService from "./MoviesService";
 
-export default class MovieView extends Component {
+export default class MoviesView extends Component {
   constructor(props) {
     super(props);
 
