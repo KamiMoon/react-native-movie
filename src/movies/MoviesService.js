@@ -1,7 +1,12 @@
 import axios from "axios";
 
 //TODO: don't hardcode here
+
+//local
 const url = "http://192.168.0.8:8000";
+
+//prod
+//const url = "https://dujxlnj50a.execute-api.us-east-2.amazonaws.com/Prod";
 
 export function convertData(data) {
   //generate an id

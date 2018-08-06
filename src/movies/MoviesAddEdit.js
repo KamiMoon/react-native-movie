@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { Text, TextInput, View, Button } from "react-native";
+import { Text, TextInput, View, Button, Alert } from "react-native";
+
+import Spinner from "../ui/spinner/Spinner";
+import Feedback from "../ui/feedback/Feedback";
 import MoviesService from "./MoviesService";
 
 export default class MoviesAdd extends Component {
@@ -12,9 +15,13 @@ export default class MoviesAdd extends Component {
     this.mode = navigation.getParam("mode", "");
 
     this.state = {
-      loaded: false,
+      isLoading: true,
+      disableEdit: false,
+      feedback: {
+        show: false
+      },
       movie: {
-        year: "",
+        year: "1988",
         title: "",
         info: {
           rating: "",
@@ -30,21 +37,34 @@ export default class MoviesAdd extends Component {
   //TODO:  duplicate code with MovieView.js
   loadMovie() {
     if (this.year && this.title) {
+      this.setState({
+        isLoading: true,
+        disableEdit: true,
+        feedback: {}
+      });
+
       this.moviesService
         .get({
           year: this.year,
           title: this.title
         })
         .then(result => {
-          console.log(result);
-
           this.setState({
-            loaded: true,
+            isLoading: false,
+            disableEdit: false,
             movie: result.data
           });
         })
         .catch(e => {
-          console.error(e);
+          this.setState({
+            isLoading: false,
+            disableEdit: false,
+            feedback: {
+              show: true,
+              title: "Error",
+              msg: e.toString()
+            }
+          });
         });
     }
   }
@@ -54,7 +74,7 @@ export default class MoviesAdd extends Component {
       this.loadMovie();
     } else {
       this.setState({
-        loaded: true
+        isLoading: false
       });
     }
   }
@@ -79,97 +99,170 @@ export default class MoviesAdd extends Component {
     });
   };
 
+  goToList = () => {
+    this.props.navigation.navigate("MoviesList", {});
+  };
+
+  addMovie = () => {
+    const movie = this.state.movie;
+
+    this.setState({
+      isLoading: true,
+      disableEdit: true,
+      feedback: {}
+    });
+
+    this.moviesService
+      .create(movie)
+      .then(result => {
+        Alert.alert(
+          "Success",
+          `Created movie ${movie.title}.`,
+          [
+            {
+              text: "OK",
+              onPress: this.goToList
+            }
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch(e => {
+        this.setState({
+          isLoading: false,
+          disableEdit: false,
+          feedback: {
+            show: true,
+            title: "Error",
+            msg: e.toString()
+          }
+        });
+      });
+  };
+
+  updateMovie = () => {
+    const movie = this.state.movie;
+
+    this.setState({
+      isLoading: true,
+      disableEdit: true,
+      feedback: {}
+    });
+
+    this.moviesService
+      .update(movie)
+      .then(result => {
+        Alert.alert(
+          "Success",
+          `Updated movie ${movie.title}.`,
+          [
+            {
+              text: "OK",
+              onPress: this.goToList
+            }
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch(e => {
+        this.setState({
+          isLoading: false,
+          disableEdit: false,
+          feedback: {
+            show: true,
+            title: "Error",
+            msg: e.toString()
+          }
+        });
+      });
+  };
+
   onSave = () => {
     if (this.mode === "Edit") {
-      this.moviesService
-        .update(this.state.movie)
-        .then(result => {
-          console.log("updated movie successfully");
-        })
-        .catch(e => {
-          console.error(e);
-        });
+      this.updateMovie();
     } else {
-      this.moviesService
-        .create(this.state.movie)
-        .then(result => {
-          console.log("create movie successfully");
-        })
-        .catch(e => {
-          console.error(e);
-        });
+      this.addMovie();
     }
   };
 
   render() {
     const mode = this.mode;
     const movie = this.state.movie;
-    const loaded = this.state.loaded;
 
     return (
       <View style={{ padding: 10 }}>
+        {this.state.isLoading && <Spinner />}
+        {this.state.feedback.show && (
+          <Feedback feedback={this.state.feedback} />
+        )}
         <View>
           <Text>{mode} Movie</Text>
         </View>
-        {loaded && (
-          <View>
-            {mode !== "Edit" && (
-              <View>
-                <TextInput
-                  placeholder="Title"
-                  value={movie.title}
-                  onChangeText={this.onChangeText.bind(this, "movie.title")}
-                />
-                <TextInput
-                  placeholder="Year"
-                  keyboardType="numeric"
-                  value={"" + movie.year}
-                  onChangeText={text => {
-                    //TODO: this is bad
-                    text = parseInt(text, 10) || "";
-                    this.onChangeText("movie.year", text);
-                  }}
-                />
-              </View>
-            )}
-
+        <View>
+          {mode !== "Edit" && (
             <View>
               <TextInput
-                placeholder="Rating"
-                keyboardType="numeric"
-                value={"" + movie.info.rating}
-                onChangeText={text => {
-                  //TODO: this is bad
-                  text = parseFloat(text) || "";
-                  this.onChangeText("movie.info.rating", text);
-                }}
+                placeholder="Title"
+                value={movie.title}
+                onChangeText={this.onChangeText.bind(this, "movie.title")}
               />
-
-              <TextInput
-                placeholder="Plot"
-                value={movie.info.plot}
-                multiline={true}
-                numberOfLines={4}
-                onChangeText={this.onChangeText.bind(this, "movie.info.plot")}
-              />
-
-              <TextInput
-                placeholder="Rank"
+              {/* <TextInput
+                placeholder="Year"
                 keyboardType="numeric"
-                value={"" + movie.info.rank}
+                value={"" + movie.year}
                 onChangeText={text => {
                   //TODO: this is bad
                   text = parseInt(text, 10) || "";
-                  this.onChangeText("movie.info.rank", text);
+                  this.onChangeText("movie.year", text);
                 }}
-              />
+              /> */}
             </View>
-
+          )}
+          {mode == "Edit" && (
             <View>
-              <Button onPress={this.onSave} title="Save" />
+              <Text>{movie.title}</Text>
             </View>
+          )}
+          <View>
+            <TextInput
+              placeholder="Rating"
+              keyboardType="numeric"
+              value={"" + movie.info.rating}
+              onChangeText={text => {
+                //TODO: this is bad
+                text = parseFloat(text) || 0.0;
+                this.onChangeText("movie.info.rating", text);
+              }}
+            />
+
+            <TextInput
+              placeholder="Plot"
+              value={movie.info.plot}
+              multiline={true}
+              numberOfLines={4}
+              onChangeText={this.onChangeText.bind(this, "movie.info.plot")}
+            />
+
+            <TextInput
+              placeholder="Rank"
+              keyboardType="numeric"
+              value={"" + movie.info.rank}
+              onChangeText={text => {
+                //TODO: this is bad
+                text = parseInt(text, 10) || 0;
+                this.onChangeText("movie.info.rank", text);
+              }}
+            />
           </View>
-        )}
+
+          <View>
+            <Button
+              onPress={this.onSave}
+              title="Save"
+              disabled={this.state.disableEdit}
+            />
+          </View>
+        </View>
       </View>
     );
   }

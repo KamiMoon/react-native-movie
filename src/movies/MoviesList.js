@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { FlatList, StyleSheet, View, Alert } from "react-native";
 
+import Spinner from "../ui/spinner/Spinner";
+import Feedback from "../ui/feedback/Feedback";
 import MoviesListItem from "./MoviesListItem";
 import MoviesService, { convertData } from "./MoviesService";
 
@@ -9,6 +11,11 @@ export default class MoviesList extends Component {
     super(props);
 
     this.state = {
+      isLoading: true,
+      disableEdit: false,
+      feedback: {
+        show: false
+      },
       movies: []
     };
 
@@ -16,23 +23,39 @@ export default class MoviesList extends Component {
   }
 
   componentDidMount() {
-    console.log("component did mount");
+    this.loadMovies();
+  }
 
+  loadMovies = () => {
+    this.setState({
+      isLoading: true,
+      disableEdit: true,
+      feedback: {}
+    });
+    //TODO: replace this query
     this.moviesService
       .query({
         year: 1988
       })
       .then(result => {
-        console.log(result);
-
         this.setState({
+          isLoading: false,
+          disableEdit: false,
           movies: convertData(result.data)
         });
       })
       .catch(e => {
-        console.error(e);
+        this.setState({
+          isLoading: false,
+          disableEdit: false,
+          feedback: {
+            show: true,
+            title: "Error",
+            msg: e.toString()
+          }
+        });
       });
-  }
+  };
 
   keyExtractor = (movie, index) => movie.year + "__" + movie.title;
 
@@ -43,14 +66,41 @@ export default class MoviesList extends Component {
     });
   };
 
-  deleteMovie = movie => {
+  deleteMovie = movieToDelete => {
+    this.setState({
+      isLoading: true,
+      disableEdit: true,
+      feedback: {}
+    });
+
     this.moviesService
-      .remove(movie)
+      .remove(movieToDelete)
       .then(result => {
-        console.log("movie deleted successfully");
+        Alert.alert(`${movieToDelete.title} successfully deleted`);
+
+        const filteredMovies = this.state.movies.filter(movie => {
+          return (
+            movie.title !== movieToDelete.title ||
+            movie.year !== movieToDelete.year
+          );
+        });
+
+        this.setState({
+          isLoading: false,
+          disableEdit: false,
+          movies: filteredMovies
+        });
       })
       .catch(e => {
-        console.error(e);
+        this.setState({
+          isLoading: false,
+          disableEdit: false,
+          feedback: {
+            show: true,
+            title: "Error",
+            msg: e.toString()
+          }
+        });
       });
   };
 
@@ -86,6 +136,7 @@ export default class MoviesList extends Component {
   renderItem = ({ item }) => (
     <MoviesListItem
       movie={item}
+      disableEdit={this.state.disableEdit}
       onPress={this.onPressItem}
       onDelete={this.onDeleteItem}
       onEdit={this.onEditItem}
@@ -95,6 +146,10 @@ export default class MoviesList extends Component {
   render() {
     return (
       <View style={styles.container}>
+        {this.state.isLoading && <Spinner />}
+        {this.state.feedback.show && (
+          <Feedback feedback={this.state.feedback} />
+        )}
         <FlatList
           data={this.state.movies}
           keyExtractor={this.keyExtractor}

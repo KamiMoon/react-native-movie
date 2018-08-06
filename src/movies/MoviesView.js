@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
+
+import Spinner from "../ui/spinner/Spinner";
+import Feedback from "../ui/feedback/Feedback";
 import MoviesService from "./MoviesService";
 
 export default class MovieView extends Component {
@@ -7,6 +10,10 @@ export default class MovieView extends Component {
     super(props);
 
     this.state = {
+      isLoading: true,
+      feedback: {
+        show: false
+      },
       movie: null
     };
 
@@ -19,20 +26,32 @@ export default class MovieView extends Component {
     this.title = navigation.getParam("title", "");
 
     if (this.year && this.title) {
+      this.setState({
+        isLoading: true,
+        feedback: {}
+      });
+
       this.moviesService
         .get({
           year: this.year,
           title: this.title
         })
         .then(result => {
-          console.log(result);
-
           this.setState({
+            isLoading: false,
             movie: result.data
           });
         })
         .catch(e => {
-          console.error(e);
+          this.setState({
+            isLoading: false,
+            disableEdit: false,
+            feedback: {
+              show: true,
+              title: "Error",
+              msg: e.toString()
+            }
+          });
         });
     }
   }
@@ -46,6 +65,11 @@ export default class MovieView extends Component {
 
     return (
       <View style={styles.container}>
+        {this.state.isLoading && <Spinner />}
+        {this.state.feedback.show && (
+          <Feedback feedback={this.state.feedback} />
+        )}
+
         {movie && (
           <View>
             <Text>Title: {movie.title}</Text>

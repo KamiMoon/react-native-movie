@@ -27,8 +27,16 @@ export default class MoviesListItem extends React.PureComponent {
         )}
         {this.props.movie && (
           <View>
-            <Button onPress={this.onEdit} title="Edit" />
-            <Button onPress={this.onDelete} title="Delete" />
+            <Button
+              onPress={this.onEdit}
+              title="Edit"
+              disabled={this.props.disableEdit}
+            />
+            <Button
+              onPress={this.onDelete}
+              title="Delete"
+              disabled={this.props.disableEdit}
+            />
           </View>
         )}
       </View>

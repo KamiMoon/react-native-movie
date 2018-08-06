@@ -1,4 +1,16 @@
+- Login/user
+- no hardcoding of urls - configurable
+- typescript
+- Redux
 - Form validation - required fields
-- Feeback
-- Redirects
 - types input for numbers is terrible
+- Eject?
+
+
+
+- TODO
+    -add/edit disable buttons while submitting
+
+- Spinners
+- Redirects
+- Feeback
