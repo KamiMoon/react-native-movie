@@ -1,64 +1,94 @@
 import React, { Component } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert
-} from "react-native";
+import { FlatList, StyleSheet, View, Alert } from "react-native";
 
 import MoviesListItem from "./MoviesListItem";
-
-const data = [
-  { id: "Devin" },
-  { id: "Jackson" },
-  { id: "James" },
-  { id: "Joel" },
-  { id: "John" },
-  { id: "Jillian" },
-  { id: "Jimmy" },
-  { id: "Julie" },
-  { id: "A" },
-  { id: "B" },
-  { id: "C" },
-  { id: "D" },
-  { id: "E" },
-  { id: "F" },
-  { id: "G" },
-  { id: "H" },
-  { id: "I" },
-  { id: "J" },
-  { id: "K" },
-  { id: "L" }
-];
+import MoviesService, { convertData } from "./MoviesService";
 
 export default class MoviesList extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      movies: []
+    };
+
+    this.moviesService = new MoviesService();
   }
 
-  _keyExtractor = (item, index) => item.id;
+  componentDidMount() {
+    console.log("component did mount");
 
-  _onPressItem = id => {
-    this.props.navigation.navigate("MoviesView", { id });
+    this.moviesService
+      .query({
+        year: 1988
+      })
+      .then(result => {
+        console.log(result);
+
+        this.setState({
+          movies: convertData(result.data)
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
+
+  keyExtractor = (movie, index) => movie.year + "__" + movie.title;
+
+  onPressItem = movie => {
+    this.props.navigation.navigate("MoviesView", {
+      year: movie.year,
+      title: movie.title
+    });
   };
 
-  _onDeleteItem = id => {
-    Alert.alert("deleted");
+  deleteMovie = movie => {
+    this.moviesService
+      .remove(movie)
+      .then(result => {
+        console.log("movie deleted successfully");
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
-  _onEditItem = id => {
-    this.props.navigation.navigate("MoviesAddEdit", { mode: "Edit", id });
+  onDeleteItem = movie => {
+    Alert.alert(
+      "Warning",
+      `Are you sure you want to delete ${movie.title}?`,
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            this.deleteMovie(movie);
+          }
+        },
+        {
+          text: "No",
+          onPress: () => console.log("No Pressed"),
+          style: "cancel"
+        }
+      ],
+      { cancelable: true }
+    );
   };
 
-  _renderItem = ({ item }) => (
+  onEditItem = movie => {
+    this.props.navigation.navigate("MoviesAddEdit", {
+      mode: "Edit",
+      year: movie.year,
+      title: movie.title
+    });
+  };
+
+  renderItem = ({ item }) => (
     <MoviesListItem
-      id={item.id}
-      onPress={this._onPressItem}
-      onDelete={this._onDeleteItem}
-      onEdit={this._onEditItem}
-      title={item.id}
+      movie={item}
+      onPress={this.onPressItem}
+      onDelete={this.onDeleteItem}
+      onEdit={this.onEditItem}
     />
   );
 
@@ -66,9 +96,9 @@ export default class MoviesList extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={data}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
+          data={this.state.movies}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
         />
       </View>
     );

@@ -2,28 +2,36 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity, Button } from "react-native";
 
 export default class MoviesListItem extends React.PureComponent {
-  _onPress = () => {
-    this.props.onPress(this.props.id);
+  onPress = () => {
+    this.props.onPress(this.props.movie);
   };
 
-  _onEdit = () => {
-    this.props.onEdit(this.props.id);
+  onEdit = () => {
+    this.props.onEdit(this.props.movie);
   };
 
-  _onDelete = () => {
-    this.props.onDelete(this.props.id);
+  onDelete = () => {
+    this.props.onDelete(this.props.movie);
   };
 
   render() {
-    const textColor = this.props.selected ? "red" : "black";
     return (
-      <TouchableOpacity onPress={this._onPress}>
-        <View>
-          <Text style={{ color: textColor }}>{this.props.title}</Text>
-          <Button onPress={this._onEdit} title="Edit" />
-          <Button onPress={this._onDelete} title="Delete" />
-        </View>
-      </TouchableOpacity>
+      <View>
+        {this.props.movie && (
+          <TouchableOpacity onPress={this.onPress}>
+            <View>
+              <Text>{this.props.movie.title}</Text>
+              <Text>{this.props.movie.year}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        {this.props.movie && (
+          <View>
+            <Button onPress={this.onEdit} title="Edit" />
+            <Button onPress={this.onDelete} title="Delete" />
+          </View>
+        )}
+      </View>
     );
   }
 }

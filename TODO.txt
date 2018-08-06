@@ -1,0 +1,4 @@
+- Form validation - required fields
+- Feeback
+- Redirects
+- types input for numbers is terrible
