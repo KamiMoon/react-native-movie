@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
+export interface FeedbackType {
+  title?: string;
+  msg?: string;
+  show?: boolean;
+}
+
 interface Props {
-  feedback?: any;
+  feedback?: FeedbackType;
 }
 
 //TODO: color based on type/tile/msg
@@ -25,7 +31,7 @@ export default class Feedback extends Component<Props> {
 
 //TODO: movie these?
 
-export function getInitialState() {
+export function getInitialState(): object {
   return {
     isLoading: true,
     disableEdit: false,
@@ -35,7 +41,7 @@ export function getInitialState() {
   };
 }
 
-export function getLoadingState() {
+export function getLoadingState(): object {
   return {
     isLoading: true,
     disableEdit: true,
@@ -43,14 +49,14 @@ export function getLoadingState() {
   };
 }
 
-export function getAfterLoadingState() {
+export function getAfterLoadingState(): object {
   return {
     isLoading: false,
     disableEdit: false
   };
 }
 
-export function getError(e: any) {
+export function getError(e: any): object {
   const errorMsg =
     e.response && e.response.data && e.response.data.message
       ? e.response.data.message

@@ -1,28 +1,31 @@
 import React, { Component } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
 import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
+  FeedbackType,
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
   getError
 } from "src/ui/feedback/Feedback";
+import Movie from "src/movies/Movie";
 import MoviesService from "src/movies/MoviesService";
 
 interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<object>;
 }
 
 interface State {
   isLoading?: boolean;
   disableEdit?: boolean;
-  feedback?: any;
-  movie?: any;
+  feedback?: FeedbackType;
+  movie?: Movie;
 }
 
 export default class MoviesAddEdit extends Component<Props, State> {
-  year: any;
+  year: number;
   title: string;
   mode: string;
   moviesService: MoviesService;
@@ -38,7 +41,7 @@ export default class MoviesAddEdit extends Component<Props, State> {
     this.state = {
       ...getInitialState(),
       movie: {
-        year: "1988",
+        year: 1988,
         title: "",
         info: {
           rating: "",

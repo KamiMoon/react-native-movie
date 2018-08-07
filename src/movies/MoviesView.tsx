@@ -1,29 +1,32 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
 import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
+  FeedbackType,
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
   getError
 } from "src/ui/feedback/Feedback";
+import Movie from "src/movies/Movie";
 import MoviesService from "src/movies/MoviesService";
 
 interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<object>;
 }
 
 interface State {
   isLoading?: boolean;
   disableEdit?: boolean;
-  feedback?: any;
-  movie?: any;
+  feedback?: FeedbackType;
+  movie?: Movie;
 }
 
 export default class MoviesView extends Component<Props, State> {
-  year: any;
-  title: any;
+  year: number;
+  title: string;
   moviesService: MoviesService;
 
   constructor(props: Props) {
@@ -82,7 +85,7 @@ export default class MoviesView extends Component<Props, State> {
             <Text>Title: {movie.title}</Text>
             <Text>Year: {movie.year}</Text>
             <Text>
-              Directors:{" "}
+              Directors:
               {movie.info.directors && movie.info.directors.join(", ")}
             </Text>
             <Text>Release Date: {movie.info.release_date}</Text>

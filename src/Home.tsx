@@ -1,13 +1,16 @@
 import React from "react";
 import { Button, ScrollView } from "react-native";
 
+import { NavigationScreenProp } from "react-navigation";
+
 export interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<object>;
 }
 
 export default class Home extends React.Component<Props> {
   render() {
     const { navigate } = this.props.navigation;
+
     return (
       <ScrollView>
         <Button

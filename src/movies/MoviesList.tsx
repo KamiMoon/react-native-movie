@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { FlatList, StyleSheet, View, Alert } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
 import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
+  FeedbackType,
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
@@ -14,13 +16,13 @@ import Movie from "src/movies/Movie";
 import MoviesService, { convertData } from "src/movies/MoviesService";
 
 interface Props {
-  navigation: any;
+  navigation: NavigationScreenProp<object>;
 }
 
 interface State {
   isLoading?: boolean;
   disableEdit?: boolean;
-  feedback?: any;
+  feedback?: FeedbackType;
   movies: Array<Movie>;
 }
 
@@ -60,7 +62,8 @@ export default class MoviesList extends Component<Props, State> {
       });
   };
 
-  keyExtractor = (movie: any, index: number) => movie.year + "__" + movie.title;
+  keyExtractor = (movie: Movie, index: number): string =>
+    movie.year + "__" + movie.title;
 
   onPressItem = (movie: Movie) => {
     this.props.navigation.navigate("MoviesView", {

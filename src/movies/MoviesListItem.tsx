@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Text, View, TouchableOpacity, Button } from "react-native";
 
+import Movie from "src/movies/Movie";
+
 interface Props {
-  onPress?: any;
-  onEdit?: any;
-  onDelete?: any;
-  movie?: any;
-  disableEdit?: boolean;
+  onPress(movie: Movie);
+  onEdit(movie: Movie);
+  onDelete(movie: Movie);
+  movie: Movie;
+  disableEdit: boolean;
 }
 
 export default class MoviesListItem extends React.PureComponent<Props> {

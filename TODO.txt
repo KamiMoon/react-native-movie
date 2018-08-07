@@ -1,6 +1,5 @@
 - Login/user
 - no hardcoding of urls - configurable
-- typescript
 - Redux
 - Form validation - required fields
 - types input for numbers is terrible
@@ -11,12 +10,6 @@
 -Paging
 
 
-- TODO
-    -add/edit disable buttons while submitting
-
-- Spinners
-- Redirects
-- Feeback
 
 
--return proper error message to client
+-Weirdness on initial creation then edit
