@@ -3,8 +3,7 @@ import { FlatList, View, Alert } from "react-native";
 import { connect } from "react-redux";
 
 import { queryMovies, deleteMovie } from "src/movies/state/MoviesState";
-import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
-import styles from "./MoviesList.styles";
+import styles from "src/movies/components/list/MoviesList.styles";
 import MoviesListItem from "src/movies/components/list/MoviesListItem";
 import Movie from "src/movies/model/Movie";
 
@@ -15,7 +14,6 @@ interface Props {
   movies: any;
   isLoading?: boolean;
   disableEdit?: boolean;
-  feedback?: FeedbackType;
 }
 
 export class MoviesList extends Component<Props> {
@@ -24,25 +22,6 @@ export class MoviesList extends Component<Props> {
   }
 
   loadMovies = () => {
-    //this.setState(getLoadingState());
-
-    //this.props.dispatch(showLoadingSpinner());
-
-    //TODO: replace this query
-    // this.moviesService
-    //   .query({
-    //     year: 1988
-    //   })
-    //   .then(result => {
-    //     this.setState({
-    //       ...getAfterLoadingState(),
-    //       movies: convertData(result.data)
-    //     });
-    //   })
-    //   .catch(e => {
-    //     this.setState(getError(e));
-    //   });
-
     this.props.queryMovies();
   };
 
@@ -57,26 +36,6 @@ export class MoviesList extends Component<Props> {
   };
 
   deleteMovie = (movieToDelete: Movie) => {
-    // this.setState(getLoadingState());
-    // this.moviesService
-    //   .remove(movieToDelete)
-    //   .then(result => {
-    //     Alert.alert(`${movieToDelete.title} successfully deleted`);
-    //     const filteredMovies = this.props.movies.filter(movie => {
-    //       return (
-    //         movie.title !== movieToDelete.title ||
-    //         movie.year !== movieToDelete.year
-    //       );
-    //     });
-    //     this.setState({
-    //       ...getAfterLoadingState()
-    //       //movies: filteredMovies
-    //     });
-    //   })
-    //   .catch(e => {
-    //     this.setState(getError(e));
-    //   });
-
     this.props.deleteMovie(movieToDelete).then(result => {
       Alert.alert(`${movieToDelete.title} successfully deleted`);
     });
@@ -122,13 +81,12 @@ export class MoviesList extends Component<Props> {
   );
 
   render() {
-    const { feedback } = this.props;
+    const { movies } = this.props;
 
     return (
       <View style={styles.container}>
-        {feedback && feedback.show && <Feedback feedback={feedback} />}
         <FlatList
-          data={this.props.movies}
+          data={movies}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
         />

@@ -11,4 +11,8 @@ const client = axios.create({
   responseType: "json"
 });
 
-export const defaultMiddleware = axiosMiddleware(client);
+const options = {
+  returnRejectedPromiseOnError: true
+};
+
+export const defaultMiddleware = axiosMiddleware(client, options);

@@ -9,6 +9,8 @@ export const spinnerMiddleware = store => next => action => {
     store.dispatch(showLoadingSpinner());
   } else if (action.payload && action.meta) {
     store.dispatch(hideLoadingSpinner());
+  } else if (action.meta && action.error) {
+    store.dispatch(hideLoadingSpinner());
   }
 
   return next(action);

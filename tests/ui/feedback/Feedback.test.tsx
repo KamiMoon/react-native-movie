@@ -1,5 +1,5 @@
 import React from "react";
-import Feedback from "src/ui/feedback/Feedback";
+import { Feedback } from "src/ui/feedback/Feedback";
 import { shallow } from "enzyme";
 
 describe("Feedback", () => {

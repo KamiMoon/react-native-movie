@@ -1,21 +1,19 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Text, TextInput, View, Button, Alert } from "react-native";
 
-import { connect } from "react-redux";
 import {
   getMovie,
   createMovie,
   updateMovie
 } from "src/movies/state/MoviesState";
 
-import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
 import Movie from "src/movies/model/Movie";
 
 interface Props {
   navigation: any;
   isLoading?: boolean;
   disableEdit?: boolean;
-  feedback?: FeedbackType;
 
   getMovie: any;
   createMovie: any;
@@ -52,25 +50,8 @@ export class MoviesAddEdit extends Component<Props, State> {
     };
   }
 
-  //TODO:  duplicate code with MovieView.js
   loadMovie() {
     if (this.year && this.title) {
-      // this.setState(getLoadingState());
-      // this.moviesService
-      //   .get({
-      //     year: this.year,
-      //     title: this.title
-      //   })
-      //   .then(result => {
-      //     this.setState({
-      //       ...getAfterLoadingState(),
-      //       movie: result.data
-      //     });
-      //   })
-      //   .catch(e => {
-      //     this.setState(getError(e));
-      //   });
-
       this.props
         .getMovie({ year: this.year, title: this.title })
         .then(result => {
@@ -111,27 +92,6 @@ export class MoviesAddEdit extends Component<Props, State> {
   addMovie = () => {
     const movie = this.state.movie;
 
-    // this.setState(getLoadingState());
-
-    // this.moviesService
-    //   .create(movie)
-    //   .then(result => {
-    //     Alert.alert(
-    //       "Success",
-    //       `Created movie ${movie.title}.`,
-    //       [
-    //         {
-    //           text: "OK",
-    //           onPress: this.goToList
-    //         }
-    //       ],
-    //       { cancelable: false }
-    //     );
-    //   })
-    //   .catch(e => {
-    //     this.setState(getError(e));
-    //   });
-
     this.props.createMovie(movie).then(result => {
       Alert.alert(
         "Success",
@@ -149,27 +109,6 @@ export class MoviesAddEdit extends Component<Props, State> {
 
   updateMovie = () => {
     const movie = this.state.movie;
-
-    // this.setState(getLoadingState());
-
-    // this.moviesService
-    //   .update(movie)
-    //   .then(result => {
-    //     Alert.alert(
-    //       "Success",
-    //       `Updated movie ${movie.title}.`,
-    //       [
-    //         {
-    //           text: "OK",
-    //           onPress: this.goToList
-    //         }
-    //       ],
-    //       { cancelable: false }
-    //     );
-    //   })
-    //   .catch(e => {
-    //     this.setState(getError(e));
-    //   });
 
     this.props.updateMovie(movie).then(result => {
       Alert.alert(
@@ -198,11 +137,10 @@ export class MoviesAddEdit extends Component<Props, State> {
     const mode = this.mode;
     const movie = this.state.movie;
 
-    const { feedback, isLoading, disableEdit } = this.props;
+    const { disableEdit } = this.props;
 
     return (
       <View style={{ padding: 10 }}>
-        {feedback && feedback.show && <Feedback feedback={feedback} />}
         <View>
           <Text>{mode} Movie</Text>
         </View>

@@ -1,17 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import { connect } from "react-redux";
-import { getMovie } from "src/movies/state/MoviesState";
 
-import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
+import styles from "./MoviesView.styles";
+import { getMovie } from "src/movies/state/MoviesState";
 import Movie from "src/movies/model/Movie";
 
 interface Props {
   navigation: any;
-  isLoading?: boolean;
-  disableEdit?: boolean;
-  feedback?: FeedbackType;
-
   movie: Movie;
   getMovie: any;
 }
@@ -22,32 +18,12 @@ export class MoviesView extends Component<Props> {
     const year = navigation.getParam("year", "");
     const title = navigation.getParam("title", "");
 
-    // if (this.year && this.title) {
-    //   this.setState(getLoadingState());
-
-    //   this.moviesService
-    //     .get({
-    //       year: this.year,
-    //       title: this.title
-    //     })
-    //     .then(result => {
-    //       this.setState({
-    //         ...getAfterLoadingState(),
-    //         movie: result.data
-    //       });
-    //     })
-    //     .catch(e => {
-    //       this.setState(getError(e));
-    //     });
-    // }
-
     if (year && title) {
       this.props.getMovie({
         year,
         title
       });
     }
-    //TODO: show error
   }
 
   componentDidMount() {
@@ -55,12 +31,10 @@ export class MoviesView extends Component<Props> {
   }
 
   render() {
-    const { movie, feedback, isLoading } = this.props;
+    const { movie } = this.props;
 
     return (
       <View style={styles.container}>
-        {feedback && feedback.show && <Feedback feedback={feedback} />}
-
         {movie && (
           <View>
             <Text>Title: {movie.title}</Text>
@@ -105,10 +79,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MoviesView);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 22
-  }
-});

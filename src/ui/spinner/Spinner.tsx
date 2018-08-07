@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { View, ActivityIndicator } from "react-native";
-import styles from "./Spinner.styles";
+import styles from "src/ui/spinner/Spinner.styles";
 
 interface Props {
   showLoadingSpinner?: boolean;

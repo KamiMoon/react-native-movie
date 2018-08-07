@@ -23,11 +23,17 @@ export function getAfterLoadingState(): object {
   };
 }
 
-export function getError(e: any): object {
+export function getErrorMsg(e: any) {
   const errorMsg =
     e.response && e.response.data && e.response.data.message
       ? e.response.data.message
       : e.toString();
+
+  return errorMsg;
+}
+
+export function getError(e: any): object {
+  const errorMsg = getErrorMsg(e);
 
   return {
     isLoading: false,
