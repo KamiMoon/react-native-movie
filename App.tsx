@@ -1,32 +1,38 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Provider } from "react-redux";
 
-import { createStackNavigator } from "react-navigation";
+import store from "src/state/storeInstance";
+import Navigator from "src/Navigator";
 
-import Home from "src/Home";
-import MoviesList from "src/movies/MoviesList";
-import MoviesView from "src/movies/MoviesView";
-import MoviesAddEdit from "src/movies/MoviesAddEdit";
+import Spinner from "src/ui/spinner/Spinner";
 
-const App = createStackNavigator(
-  {
-    Home: { screen: Home },
-    MoviesList: { screen: MoviesList },
-    MoviesView: { screen: MoviesView },
-    MoviesAddEdit: { screen: MoviesAddEdit }
-  },
-  {
-    initialRouteName: "Home"
+export default class extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Navigator />
+          <Spinner />
+        </View>
+      </Provider>
+    );
   }
-);
-
-export default App;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: "#fff"
+    //marginTop: 10
   }
 });
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#fff",
+//     alignItems: "center",
+//     justifyContent: "center"
+//   }
+// });

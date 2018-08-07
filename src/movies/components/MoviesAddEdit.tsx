@@ -1,34 +1,36 @@
 import React, { Component } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
-import { NavigationScreenProp } from "react-navigation";
+
+import { connect } from "react-redux";
+import {
+  getMovie,
+  createMovie,
+  updateMovie
+} from "src/movies/state/MoviesState";
 
 import Spinner from "src/ui/spinner/Spinner";
-import Feedback, {
-  FeedbackType,
-  getInitialState,
-  getLoadingState,
-  getAfterLoadingState,
-  getError
-} from "src/ui/feedback/Feedback";
-import Movie from "src/movies/Movie";
-import MoviesService from "src/movies/MoviesService";
+import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
+import Movie from "src/movies/model/Movie";
 
 interface Props {
-  navigation: NavigationScreenProp<object>;
-}
-
-interface State {
+  navigation: any;
   isLoading?: boolean;
   disableEdit?: boolean;
   feedback?: FeedbackType;
+
+  getMovie: any;
+  createMovie: any;
+  updateMovie: any;
+}
+
+interface State {
   movie?: Movie;
 }
 
-export default class MoviesAddEdit extends Component<Props, State> {
+export class MoviesAddEdit extends Component<Props, State> {
   year: number;
   title: string;
   mode: string;
-  moviesService: MoviesService;
 
   constructor(props: Props) {
     super(props);
@@ -39,7 +41,6 @@ export default class MoviesAddEdit extends Component<Props, State> {
     this.mode = navigation.getParam("mode", "");
 
     this.state = {
-      ...getInitialState(),
       movie: {
         year: 1988,
         title: "",
@@ -50,28 +51,33 @@ export default class MoviesAddEdit extends Component<Props, State> {
         }
       }
     };
-
-    this.moviesService = new MoviesService();
   }
 
   //TODO:  duplicate code with MovieView.js
   loadMovie() {
     if (this.year && this.title) {
-      this.setState(getLoadingState());
+      // this.setState(getLoadingState());
+      // this.moviesService
+      //   .get({
+      //     year: this.year,
+      //     title: this.title
+      //   })
+      //   .then(result => {
+      //     this.setState({
+      //       ...getAfterLoadingState(),
+      //       movie: result.data
+      //     });
+      //   })
+      //   .catch(e => {
+      //     this.setState(getError(e));
+      //   });
 
-      this.moviesService
-        .get({
-          year: this.year,
-          title: this.title
-        })
+      this.props
+        .getMovie({ year: this.year, title: this.title })
         .then(result => {
           this.setState({
-            ...getAfterLoadingState(),
-            movie: result.data
+            movie: result.payload.data
           });
-        })
-        .catch(e => {
-          this.setState(getError(e));
         });
     }
   }
@@ -79,10 +85,6 @@ export default class MoviesAddEdit extends Component<Props, State> {
   componentDidMount() {
     if (this.mode === "Edit") {
       this.loadMovie();
-    } else {
-      this.setState({
-        isLoading: false
-      });
     }
   }
 
@@ -110,51 +112,79 @@ export default class MoviesAddEdit extends Component<Props, State> {
   addMovie = () => {
     const movie = this.state.movie;
 
-    this.setState(getLoadingState());
+    // this.setState(getLoadingState());
 
-    this.moviesService
-      .create(movie)
-      .then(result => {
-        Alert.alert(
-          "Success",
-          `Created movie ${movie.title}.`,
-          [
-            {
-              text: "OK",
-              onPress: this.goToList
-            }
-          ],
-          { cancelable: false }
-        );
-      })
-      .catch(e => {
-        this.setState(getError(e));
-      });
+    // this.moviesService
+    //   .create(movie)
+    //   .then(result => {
+    //     Alert.alert(
+    //       "Success",
+    //       `Created movie ${movie.title}.`,
+    //       [
+    //         {
+    //           text: "OK",
+    //           onPress: this.goToList
+    //         }
+    //       ],
+    //       { cancelable: false }
+    //     );
+    //   })
+    //   .catch(e => {
+    //     this.setState(getError(e));
+    //   });
+
+    this.props.createMovie(movie).then(result => {
+      Alert.alert(
+        "Success",
+        `Created movie ${movie.title}.`,
+        [
+          {
+            text: "OK",
+            onPress: this.goToList
+          }
+        ],
+        { cancelable: false }
+      );
+    });
   };
 
   updateMovie = () => {
     const movie = this.state.movie;
 
-    this.setState(getLoadingState());
+    // this.setState(getLoadingState());
 
-    this.moviesService
-      .update(movie)
-      .then(result => {
-        Alert.alert(
-          "Success",
-          `Updated movie ${movie.title}.`,
-          [
-            {
-              text: "OK",
-              onPress: this.goToList
-            }
-          ],
-          { cancelable: false }
-        );
-      })
-      .catch(e => {
-        this.setState(getError(e));
-      });
+    // this.moviesService
+    //   .update(movie)
+    //   .then(result => {
+    //     Alert.alert(
+    //       "Success",
+    //       `Updated movie ${movie.title}.`,
+    //       [
+    //         {
+    //           text: "OK",
+    //           onPress: this.goToList
+    //         }
+    //       ],
+    //       { cancelable: false }
+    //     );
+    //   })
+    //   .catch(e => {
+    //     this.setState(getError(e));
+    //   });
+
+    this.props.updateMovie(movie).then(result => {
+      Alert.alert(
+        "Success",
+        `Updated movie ${movie.title}.`,
+        [
+          {
+            text: "OK",
+            onPress: this.goToList
+          }
+        ],
+        { cancelable: false }
+      );
+    });
   };
 
   onSave = () => {
@@ -169,12 +199,12 @@ export default class MoviesAddEdit extends Component<Props, State> {
     const mode = this.mode;
     const movie = this.state.movie;
 
+    const { feedback, isLoading, disableEdit } = this.props;
+
     return (
       <View style={{ padding: 10 }}>
-        {this.state.isLoading && <Spinner />}
-        {this.state.feedback.show && (
-          <Feedback feedback={this.state.feedback} />
-        )}
+        {isLoading && <Spinner />}
+        {feedback && feedback.show && <Feedback feedback={feedback} />}
         <View>
           <Text>{mode} Movie</Text>
         </View>
@@ -236,11 +266,7 @@ export default class MoviesAddEdit extends Component<Props, State> {
           </View>
 
           <View>
-            <Button
-              onPress={this.onSave}
-              title="Save"
-              disabled={this.state.disableEdit}
-            />
+            <Button onPress={this.onSave} title="Save" disabled={disableEdit} />
           </View>
         </View>
       </View>
@@ -248,5 +274,19 @@ export default class MoviesAddEdit extends Component<Props, State> {
   }
 }
 
-// skip this line if using Create React Native App
-//AppRegistry.registerComponent("AwesomeProject", () => PizzaTranslator);
+const mapStateToProps = state => {
+  return {
+    ...state.movies
+  };
+};
+
+const mapDispatchToProps = {
+  getMovie,
+  createMovie,
+  updateMovie
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MoviesAddEdit);

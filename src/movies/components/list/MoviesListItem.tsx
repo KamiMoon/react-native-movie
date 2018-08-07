@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, TouchableOpacity, Button } from "react-native";
 
-import Movie from "src/movies/Movie";
+import Movie from "src/movies/model/Movie";
 
 interface Props {
   onPress(movie: Movie);

@@ -1,68 +1,54 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import { NavigationScreenProp } from "react-navigation";
+import { connect } from "react-redux";
+import { getMovie } from "src/movies/state/MoviesState";
 
 import Spinner from "src/ui/spinner/Spinner";
-import Feedback, {
-  FeedbackType,
-  getInitialState,
-  getLoadingState,
-  getAfterLoadingState,
-  getError
-} from "src/ui/feedback/Feedback";
-import Movie from "src/movies/Movie";
-import MoviesService from "src/movies/MoviesService";
+import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
+import Movie from "src/movies/model/Movie";
 
 interface Props {
-  navigation: NavigationScreenProp<object>;
-}
-
-interface State {
+  navigation: any;
   isLoading?: boolean;
   disableEdit?: boolean;
   feedback?: FeedbackType;
-  movie?: Movie;
+
+  movie: Movie;
+  getMovie: any;
 }
 
-export default class MoviesView extends Component<Props, State> {
-  year: number;
-  title: string;
-  moviesService: MoviesService;
-
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      ...getInitialState(),
-      movie: null
-    };
-
-    this.moviesService = new MoviesService();
-  }
-
+export class MoviesView extends Component<Props> {
   loadMovie() {
     const { navigation } = this.props;
-    this.year = navigation.getParam("year", "");
-    this.title = navigation.getParam("title", "");
+    const year = navigation.getParam("year", "");
+    const title = navigation.getParam("title", "");
 
-    if (this.year && this.title) {
-      this.setState(getLoadingState());
+    // if (this.year && this.title) {
+    //   this.setState(getLoadingState());
 
-      this.moviesService
-        .get({
-          year: this.year,
-          title: this.title
-        })
-        .then(result => {
-          this.setState({
-            ...getAfterLoadingState(),
-            movie: result.data
-          });
-        })
-        .catch(e => {
-          this.setState(getError(e));
-        });
+    //   this.moviesService
+    //     .get({
+    //       year: this.year,
+    //       title: this.title
+    //     })
+    //     .then(result => {
+    //       this.setState({
+    //         ...getAfterLoadingState(),
+    //         movie: result.data
+    //       });
+    //     })
+    //     .catch(e => {
+    //       this.setState(getError(e));
+    //     });
+    // }
+
+    if (year && title) {
+      this.props.getMovie({
+        year,
+        title
+      });
     }
+    //TODO: show error
   }
 
   componentDidMount() {
@@ -70,15 +56,12 @@ export default class MoviesView extends Component<Props, State> {
   }
 
   render() {
-    const movie = this.state.movie;
+    const { movie, feedback, isLoading } = this.props;
 
     return (
       <View style={styles.container}>
-        {this.state.isLoading && <Spinner />}
-        {this.state.feedback &&
-          this.state.feedback.show && (
-            <Feedback feedback={this.state.feedback} />
-          )}
+        {isLoading && <Spinner />}
+        {feedback && feedback.show && <Feedback feedback={feedback} />}
 
         {movie && (
           <View>
@@ -109,6 +92,21 @@ export default class MoviesView extends Component<Props, State> {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    ...state.movies
+  };
+};
+
+const mapDispatchToProps = {
+  getMovie
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MoviesView);
 
 const styles = StyleSheet.create({
   container: {
