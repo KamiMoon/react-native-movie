@@ -1,13 +1,23 @@
 module.exports = {
   preset: "jest-expo",
-  collectCoverageFrom: ["src/**/*.{js}"],
-  setupFiles: ["<rootDir>/tests/setupTests.js"],
+  collectCoverageFrom: ["src/**/*.{ts|tsx}"],
+  setupFiles: ["<rootDir>/tests/setupTests.ts"],
   testMatch: [
-    "<rootDir>/tests/**/__tests__/**/*.+(js|ts|tsx)",
-    "<rootDir>/tests/**/?(*.)(spec|test).+(js|ts|tsx)"
+    "<rootDir>/tests/**/__tests__/**/*.+(ts|tsx)",
+    "<rootDir>/tests/**/?(*.)(spec|test).+(ts|tsx)"
   ],
   moduleNameMapper: {
     "src(.*)$": "<rootDir>/src/$1",
     "tests(.*)$": "<rootDir>/tests/$1"
+  },
+  testPathIgnorePatterns: ["\\.snap$", "<rootDir>/node_modules/"],
+  moduleFileExtensions: ["ts", "tsx", "js"],
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  globals: {
+    "ts-jest": {
+      tsConfigFile: "tsconfig.json"
+    }
   }
 };

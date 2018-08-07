@@ -1,18 +1,33 @@
 import React, { Component } from "react";
 import { FlatList, StyleSheet, View, Alert } from "react-native";
 
-import Spinner from "../ui/spinner/Spinner";
+import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
   getError
-} from "../ui/feedback/Feedback";
-import MoviesListItem from "./MoviesListItem";
-import MoviesService, { convertData } from "./MoviesService";
+} from "src/ui/feedback/Feedback";
+import MoviesListItem from "src/movies/MoviesListItem";
 
-export default class MoviesList extends Component {
-  constructor(props) {
+import Movie from "src/movies/Movie";
+import MoviesService, { convertData } from "src/movies/MoviesService";
+
+interface Props {
+  navigation: any;
+}
+
+interface State {
+  isLoading?: boolean;
+  disableEdit?: boolean;
+  feedback?: any;
+  movies: Array<Movie>;
+}
+
+export default class MoviesList extends Component<Props, State> {
+  moviesService: MoviesService;
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -45,16 +60,16 @@ export default class MoviesList extends Component {
       });
   };
 
-  keyExtractor = (movie, index) => movie.year + "__" + movie.title;
+  keyExtractor = (movie: any, index: number) => movie.year + "__" + movie.title;
 
-  onPressItem = movie => {
+  onPressItem = (movie: Movie) => {
     this.props.navigation.navigate("MoviesView", {
       year: movie.year,
       title: movie.title
     });
   };
 
-  deleteMovie = movieToDelete => {
+  deleteMovie = (movieToDelete: Movie) => {
     this.setState(getLoadingState());
 
     this.moviesService
@@ -79,7 +94,7 @@ export default class MoviesList extends Component {
       });
   };
 
-  onDeleteItem = movie => {
+  onDeleteItem = (movie: Movie) => {
     Alert.alert(
       "Warning",
       `Are you sure you want to delete ${movie.title}?`,
@@ -100,7 +115,7 @@ export default class MoviesList extends Component {
     );
   };
 
-  onEditItem = movie => {
+  onEditItem = (movie: Movie) => {
     this.props.navigation.navigate("MoviesAddEdit", {
       mode: "Edit",
       year: movie.year,

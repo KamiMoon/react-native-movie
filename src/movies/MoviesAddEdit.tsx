@@ -1,17 +1,33 @@
 import React, { Component } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
 
-import Spinner from "../ui/spinner/Spinner";
+import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
   getError
-} from "../ui/feedback/Feedback";
-import MoviesService from "./MoviesService";
+} from "src/ui/feedback/Feedback";
+import MoviesService from "src/movies/MoviesService";
 
-export default class MoviesAddEdit extends Component {
-  constructor(props) {
+interface Props {
+  navigation: any;
+}
+
+interface State {
+  isLoading?: boolean;
+  disableEdit?: boolean;
+  feedback?: any;
+  movie?: any;
+}
+
+export default class MoviesAddEdit extends Component<Props, State> {
+  year: any;
+  title: string;
+  mode: string;
+  moviesService: MoviesService;
+
+  constructor(props: Props) {
     super(props);
 
     const { navigation } = this.props;
@@ -191,8 +207,8 @@ export default class MoviesAddEdit extends Component {
               value={"" + movie.info.rating}
               onChangeText={text => {
                 //TODO: this is bad
-                text = parseFloat(text) || 0.0;
-                this.onChangeText("movie.info.rating", text);
+                const converted = parseFloat(text) || 0.0;
+                this.onChangeText("movie.info.rating", converted);
               }}
             />
 
@@ -210,8 +226,8 @@ export default class MoviesAddEdit extends Component {
               value={"" + movie.info.rank}
               onChangeText={text => {
                 //TODO: this is bad
-                text = parseInt(text, 10) || 0;
-                this.onChangeText("movie.info.rank", text);
+                const converted = parseInt(text, 10) || 0;
+                this.onChangeText("movie.info.rank", converted);
               }}
             />
           </View>

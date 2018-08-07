@@ -1,7 +1,11 @@
 import React from "react";
 import { Button, ScrollView } from "react-native";
 
-export default class Home extends React.Component {
+export interface Props {
+  navigation: any;
+}
+
+export default class Home extends React.Component<Props> {
   render() {
     const { navigate } = this.props.navigation;
     return (

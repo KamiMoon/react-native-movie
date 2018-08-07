@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import { Text, View, TouchableOpacity, Button } from "react-native";
 
-export default class MoviesListItem extends React.PureComponent {
+interface Props {
+  onPress?: any;
+  onEdit?: any;
+  onDelete?: any;
+  movie?: any;
+  disableEdit?: boolean;
+}
+
+export default class MoviesListItem extends React.PureComponent<Props> {
   onPress = () => {
     this.props.onPress(this.props.movie);
   };

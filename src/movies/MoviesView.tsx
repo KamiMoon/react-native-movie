@@ -1,17 +1,32 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 
-import Spinner from "../ui/spinner/Spinner";
+import Spinner from "src/ui/spinner/Spinner";
 import Feedback, {
   getInitialState,
   getLoadingState,
   getAfterLoadingState,
   getError
-} from "../ui/feedback/Feedback";
-import MoviesService from "./MoviesService";
+} from "src/ui/feedback/Feedback";
+import MoviesService from "src/movies/MoviesService";
 
-export default class MoviesView extends Component {
-  constructor(props) {
+interface Props {
+  navigation: any;
+}
+
+interface State {
+  isLoading?: boolean;
+  disableEdit?: boolean;
+  feedback?: any;
+  movie?: any;
+}
+
+export default class MoviesView extends Component<Props, State> {
+  year: any;
+  title: any;
+  moviesService: MoviesService;
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -57,9 +72,10 @@ export default class MoviesView extends Component {
     return (
       <View style={styles.container}>
         {this.state.isLoading && <Spinner />}
-        {this.state.feedback.show && (
-          <Feedback feedback={this.state.feedback} />
-        )}
+        {this.state.feedback &&
+          this.state.feedback.show && (
+            <Feedback feedback={this.state.feedback} />
+          )}
 
         {movie && (
           <View>

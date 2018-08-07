@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
+interface Props {
+  feedback?: any;
+}
+
 //TODO: color based on type/tile/msg
-export default class Feedback extends Component {
+export default class Feedback extends Component<Props> {
   render() {
     const feedback = this.props.feedback;
 
@@ -46,7 +50,7 @@ export function getAfterLoadingState() {
   };
 }
 
-export function getError(e) {
+export function getError(e: any) {
   const errorMsg =
     e.response && e.response.data && e.response.data.message
       ? e.response.data.message
