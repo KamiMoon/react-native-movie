@@ -8,7 +8,6 @@ import {
   updateMovie
 } from "src/movies/state/MoviesState";
 
-import Spinner from "src/ui/spinner/Spinner";
 import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
 import Movie from "src/movies/model/Movie";
 
@@ -203,7 +202,6 @@ export class MoviesAddEdit extends Component<Props, State> {
 
     return (
       <View style={{ padding: 10 }}>
-        {isLoading && <Spinner />}
         {feedback && feedback.show && <Feedback feedback={feedback} />}
         <View>
           <Text>{mode} Movie</Text>

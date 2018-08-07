@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, TouchableOpacity, Button } from "react-native";
 
 import Movie from "src/movies/model/Movie";

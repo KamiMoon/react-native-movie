@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import { FlatList, StyleSheet, View, Alert } from "react-native";
-
+import { FlatList, View, Alert } from "react-native";
 import { connect } from "react-redux";
+
 import { queryMovies, deleteMovie } from "src/movies/state/MoviesState";
-
-import { showLoadingSpinner } from "src/ui/spinner/Spinner";
-
 import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
+import styles from "./MoviesList.styles";
 import MoviesListItem from "src/movies/components/list/MoviesListItem";
-
 import Movie from "src/movies/model/Movie";
 
 interface Props {
@@ -81,8 +78,6 @@ export class MoviesList extends Component<Props> {
     //   });
 
     this.props.deleteMovie(movieToDelete).then(result => {
-      console.log(result);
-
       Alert.alert(`${movieToDelete.title} successfully deleted`);
     });
   };
@@ -141,18 +136,6 @@ export class MoviesList extends Component<Props> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 22
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44
-  }
-});
 
 const mapStateToProps = state => {
   return {

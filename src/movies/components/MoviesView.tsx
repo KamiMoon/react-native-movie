@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Image } from "react-native";
 import { connect } from "react-redux";
 import { getMovie } from "src/movies/state/MoviesState";
 
-import Spinner from "src/ui/spinner/Spinner";
 import Feedback, { FeedbackType } from "src/ui/feedback/Feedback";
 import Movie from "src/movies/model/Movie";
 
@@ -60,7 +59,6 @@ export class MoviesView extends Component<Props> {
 
     return (
       <View style={styles.container}>
-        {isLoading && <Spinner />}
         {feedback && feedback.show && <Feedback feedback={feedback} />}
 
         {movie && (
