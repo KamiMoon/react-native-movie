@@ -4,14 +4,16 @@
 - types input for numbers is terrible
 - Eject?
 
--UI library to it looks good
-
 -Paging
 
 -Weirdness on initial creation then edit
 
 
 UI changes
+
+    Properly set title in top bar
+
+
 
     fix search screen
     -search bar
@@ -29,3 +31,10 @@ UI changes
         -image is cut off
         -format release date
         -format run time (sec)
+
+
+
+Home
+Search
+Favorites
+Profile
