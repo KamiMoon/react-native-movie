@@ -40,9 +40,9 @@ export class MoviesAdd extends Component<Props, State> {
         year: 1988,
         title: "",
         info: {
-          rating: "",
+          rating: 0,
           plot: "",
-          rank: ""
+          rank: 0
         }
       }
     };

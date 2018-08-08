@@ -43,17 +43,7 @@ export class MoviesEdit extends Component<Props, State> {
     this.year = navigation.getParam("year", "");
     this.title = navigation.getParam("title", "");
 
-    this.state = {
-      movie: {
-        year: 1988,
-        title: "",
-        info: {
-          rating: "",
-          plot: "",
-          rank: ""
-        }
-      }
-    };
+    this.state = {};
   }
 
   loadMovie() {
@@ -122,9 +112,7 @@ export class MoviesEdit extends Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Body>
-            <Title>Edit {movie.title}</Title>
-          </Body>
+          <Body>{movie && <Title>Edit {movie.title}</Title>}</Body>
         </Header>
 
         {movie ? (

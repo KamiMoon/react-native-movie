@@ -1,4 +1,5 @@
 import * as StateHelper from "src/state/StateHelper";
+import Movie from "src/movies/model/Movie";
 
 //Actions
 export const CREATE_MOVIE = "movies/CREATE_MOVIE";
@@ -22,7 +23,7 @@ export const DELETE_MOVIE_SUCCESS = "movies/DELETE_MOVIE_SUCCESS";
 export const DELETE_MOVIE_FAIL = "movies/DELETE_MOVIE_FAIL";
 
 //Action Creators
-export function createMovie(movie: any) {
+export function createMovie(movie: Movie) {
   return {
     type: CREATE_MOVIE,
     payload: {
@@ -35,7 +36,7 @@ export function createMovie(movie: any) {
   };
 }
 
-export function queryMovies(movie: any) {
+export function queryMovies(movie: Movie) {
   return {
     type: QUERY_MOVIES,
     payload: {
@@ -47,7 +48,7 @@ export function queryMovies(movie: any) {
   };
 }
 
-export function getMovie(movie: any) {
+export function getMovie(movie: Movie) {
   return {
     type: GET_MOVIE,
     payload: {
@@ -58,7 +59,7 @@ export function getMovie(movie: any) {
   };
 }
 
-export function updateMovie(movie: any) {
+export function updateMovie(movie: Movie) {
   return {
     type: UPDATE_MOVIE,
     payload: {
@@ -71,7 +72,7 @@ export function updateMovie(movie: any) {
   };
 }
 
-export function deleteMovie(movie: any) {
+export function deleteMovie(movie: Movie) {
   return {
     type: DELETE_MOVIE,
     movieToDelete: movie,
