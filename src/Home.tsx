@@ -19,6 +19,10 @@ export default class Home extends React.Component<Props> {
           title="Add Movie"
           onPress={() => navigate("MoviesAddEdit", { mode: "Add" })}
         />
+        <Button
+          title="Example Form"
+          onPress={() => navigate("ExampleForm", {})}
+        />
       </ScrollView>
     );
   }

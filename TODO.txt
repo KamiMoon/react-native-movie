@@ -1,15 +1,11 @@
 - Login/user
 - no hardcoding of urls - configurable
-- Redux
 - Form validation - required fields
 - types input for numbers is terrible
 - Eject?
 
-
+-UI library to it looks good
 
 -Paging
-
-
-
 
 -Weirdness on initial creation then edit
