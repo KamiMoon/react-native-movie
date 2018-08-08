@@ -7,7 +7,7 @@ module.exports = {
     "<rootDir>/tests/**/?(*.)(spec|test).+(ts|tsx)"
   ],
   moduleNameMapper: {
-    "src(.*)$": "<rootDir>/src/$1",
+    "^src/(.*)$": "<rootDir>/src/$1",
     "tests(.*)$": "<rootDir>/tests/$1"
   },
   testPathIgnorePatterns: ["\\.snap$", "<rootDir>/node_modules/"],
@@ -19,5 +19,8 @@ module.exports = {
     "ts-jest": {
       tsConfigFile: "tsconfig.json"
     }
-  }
+  },
+  transformIgnorePatterns: [
+    "node_modules/(?!native-base|native-base-shoutem-theme|react-native-easy-grid|react-native|react-navigation|expo|@expo)"
+  ]
 };

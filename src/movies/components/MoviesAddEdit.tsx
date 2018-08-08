@@ -1,6 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Text, TextInput, View, Button, Alert } from "react-native";
+import { Alert } from "react-native";
+import {
+  Body,
+  Button,
+  Container,
+  Header,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label,
+  Text,
+  Title
+} from "native-base";
 
 import {
   getMovie,
@@ -136,76 +149,75 @@ export class MoviesAddEdit extends Component<Props, State> {
   render() {
     const mode = this.mode;
     const movie = this.state.movie;
-
     const { disableEdit } = this.props;
 
     return (
-      <View style={{ padding: 10 }}>
-        <View>
-          <Text>{mode} Movie</Text>
-        </View>
-        <View>
-          {mode !== "Edit" && (
-            <View>
-              <TextInput
-                placeholder="Title"
-                value={movie.title}
-                onChangeText={this.onChangeText.bind(this, "movie.title")}
-              />
-              {/* <TextInput
-                placeholder="Year"
+      <Container>
+        <Header>
+          <Body>
+            {mode === "Edit" ? (
+              <Title>Edit {movie.title}</Title>
+            ) : (
+              <Title>Add Movie</Title>
+            )}
+          </Body>
+        </Header>
+
+        <Content>
+          <Form>
+            {mode !== "Edit" && (
+              <Item stackedLabel>
+                <Label>Title</Label>
+                <Input
+                  value={movie.title}
+                  onChangeText={this.onChangeText.bind(this, "movie.title")}
+                />
+              </Item>
+            )}
+            <Item stackedLabel>
+              <Label>Rating</Label>
+              <Input
                 keyboardType="numeric"
-                value={"" + movie.year}
+                value={"" + movie.info.rating}
                 onChangeText={text => {
                   //TODO: this is bad
-                  text = parseInt(text, 10) || "";
-                  this.onChangeText("movie.year", text);
+                  const converted = parseFloat(text) || 0.0;
+                  this.onChangeText("movie.info.rating", converted);
                 }}
-              /> */}
-            </View>
-          )}
-          {mode == "Edit" && (
-            <View>
-              <Text>{movie.title}</Text>
-            </View>
-          )}
-          <View>
-            <TextInput
-              placeholder="Rating"
-              keyboardType="numeric"
-              value={"" + movie.info.rating}
-              onChangeText={text => {
-                //TODO: this is bad
-                const converted = parseFloat(text) || 0.0;
-                this.onChangeText("movie.info.rating", converted);
-              }}
-            />
-
-            <TextInput
-              placeholder="Plot"
-              value={movie.info.plot}
-              multiline={true}
-              numberOfLines={4}
-              onChangeText={this.onChangeText.bind(this, "movie.info.plot")}
-            />
-
-            <TextInput
-              placeholder="Rank"
-              keyboardType="numeric"
-              value={"" + movie.info.rank}
-              onChangeText={text => {
-                //TODO: this is bad
-                const converted = parseInt(text, 10) || 0;
-                this.onChangeText("movie.info.rank", converted);
-              }}
-            />
-          </View>
-
-          <View>
-            <Button onPress={this.onSave} title="Save" disabled={disableEdit} />
-          </View>
-        </View>
-      </View>
+              />
+            </Item>
+            <Item stackedLabel>
+              <Label>Plot</Label>
+              <Input
+                value={movie.info.plot}
+                multiline={true}
+                numberOfLines={4}
+                onChangeText={this.onChangeText.bind(this, "movie.info.plot")}
+              />
+            </Item>
+            <Item stackedLabel>
+              <Label>Rank</Label>
+              <Input
+                keyboardType="numeric"
+                value={"" + movie.info.rank}
+                onChangeText={text => {
+                  //TODO: this is bad
+                  const converted = parseInt(text, 10) || 0;
+                  this.onChangeText("movie.info.rank", converted);
+                }}
+              />
+            </Item>
+          </Form>
+          <Button
+            block
+            style={{ margin: 15, marginTop: 50 }}
+            onPress={this.onSave}
+            disabled={disableEdit}
+          >
+            <Text>Save</Text>
+          </Button>
+        </Content>
+      </Container>
     );
   }
 }

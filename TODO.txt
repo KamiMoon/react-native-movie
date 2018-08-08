@@ -9,3 +9,23 @@
 -Paging
 
 -Weirdness on initial creation then edit
+
+
+UI changes
+
+    fix search screen
+    -search bar
+    -filter fullscreen/modal
+    -list
+        -slide to delte edit
+        -buttons
+
+
+
+    fix create/edit
+
+
+    fix view
+        -image is cut off
+        -format release date
+        -format run time (sec)

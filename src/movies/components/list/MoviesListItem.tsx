@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Button } from "react-native";
+import { Right, Button, ListItem, Body, Text } from "native-base";
 
 import Movie from "src/movies/model/Movie";
 
@@ -26,30 +26,24 @@ export default class MoviesListItem extends React.PureComponent<Props> {
 
   render() {
     return (
-      <View>
-        {this.props.movie && (
-          <TouchableOpacity onPress={this.onPress}>
-            <View>
-              <Text>{this.props.movie.title}</Text>
-              <Text>{this.props.movie.year}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        {this.props.movie && (
-          <View>
-            <Button
-              onPress={this.onEdit}
-              title="Edit"
-              disabled={this.props.disableEdit}
-            />
-            <Button
-              onPress={this.onDelete}
-              title="Delete"
-              disabled={this.props.disableEdit}
-            />
-          </View>
-        )}
-      </View>
+      <ListItem style={{ marginLeft: 0 }} onPress={this.onPress}>
+        <Body>
+          <Text style={{ fontWeight: "bold" }}>{this.props.movie.title}</Text>
+          <Text>{this.props.movie.year}</Text>
+        </Body>
+        <Right>
+          <Button onPress={this.onEdit} disabled={this.props.disableEdit}>
+            <Text>Edit</Text>
+          </Button>
+          <Button
+            danger
+            onPress={this.onDelete}
+            disabled={this.props.disableEdit}
+          >
+            <Text>Delete</Text>
+          </Button>
+        </Right>
+      </ListItem>
     );
   }
 }

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { FlatList, View, Alert } from "react-native";
+import { FlatList, Alert } from "react-native";
 import { connect } from "react-redux";
 
 import { queryMovies, deleteMovie } from "src/movies/state/MoviesState";
-import styles from "src/movies/components/list/MoviesList.styles";
 import MoviesListItem from "src/movies/components/list/MoviesListItem";
 import Movie from "src/movies/model/Movie";
 
@@ -84,13 +83,11 @@ export class MoviesList extends Component<Props> {
     const { movies } = this.props;
 
     return (
-      <View style={styles.container}>
-        <FlatList
-          data={movies}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-        />
-      </View>
+      <FlatList
+        data={movies}
+        keyExtractor={this.keyExtractor}
+        renderItem={this.renderItem}
+      />
     );
   }
 }

@@ -1,8 +1,18 @@
 import React, { Component } from "react";
-import { View, Text, Image } from "react-native";
 import { connect } from "react-redux";
+import { Image } from "react-native";
+import {
+  Container,
+  Content,
+  Card,
+  CardItem,
+  Text,
+  Left,
+  Body,
+  H2
+} from "native-base";
+import { Col, Row, Grid } from "react-native-easy-grid";
 
-import styles from "./MoviesView.styles";
 import { getMovie } from "src/movies/state/MoviesState";
 import Movie from "src/movies/model/Movie";
 
@@ -34,33 +44,93 @@ export class MoviesView extends Component<Props> {
     const { movie } = this.props;
 
     return (
-      <View style={styles.container}>
+      <Container>
         {movie && (
-          <View>
-            <Text>Title: {movie.title}</Text>
-            <Text>Year: {movie.year}</Text>
-            <Text>
-              Directors:
-              {movie.info.directors && movie.info.directors.join(", ")}
-            </Text>
-            <Text>Release Date: {movie.info.release_date}</Text>
-            <Text>Rating: {movie.info.rating}</Text>
-            <Text>
-              Genres: {movie.info.genres && movie.info.genres.join(", ")}
-            </Text>
-            <Image
-              source={{ uri: movie.info.image_url }}
-              style={{ width: 200, height: 300 }}
-            />
-            <Text>Plot: {movie.info.plot}</Text>
-            <Text>Rank: {movie.info.rank}</Text>
-            <Text>Run time (secs): {movie.info.running_time_secs}</Text>
-            <Text>
-              Actors: {movie.info.actors && movie.info.actors.join(", ")}
-            </Text>
-          </View>
+          <Content>
+            <Card style={{ flex: 0 }}>
+              <CardItem>
+                <Left>
+                  <Body>
+                    <H2>{movie.title}</H2>
+                    <Text note>{movie.year}</Text>
+                  </Body>
+                </Left>
+              </CardItem>
+              <CardItem>
+                <Body>
+                  <Image
+                    source={{ uri: movie.info.image_url }}
+                    style={{ height: 500, width: 350, flex: 1 }}
+                  />
+                  <Text>{movie.info.plot}</Text>
+                </Body>
+              </CardItem>
+            </Card>
+
+            <Card>
+              <CardItem>
+                <Body>
+                  <Grid>
+                    <Col>
+                      <Row>
+                        <Text>Genres:</Text>
+                      </Row>
+                      <Row>
+                        <Text>Release Date:</Text>
+                      </Row>
+                      <Row>
+                        <Text>Run time (secs):</Text>
+                      </Row>
+                      <Row>
+                        <Text>Rating:</Text>
+                      </Row>
+                      <Row>
+                        <Text>Rank:</Text>
+                      </Row>
+                      <Row>
+                        <Text>Directors:</Text>
+                      </Row>
+                      <Row>
+                        <Text>Actors:</Text>
+                      </Row>
+                    </Col>
+                    <Col>
+                      <Row>
+                        <Text>
+                          {movie.info.genres && movie.info.genres.join(", ")}
+                        </Text>
+                      </Row>
+                      <Row>
+                        <Text>{movie.info.release_date}</Text>
+                      </Row>
+                      <Row>
+                        <Text>{movie.info.running_time_secs}</Text>
+                      </Row>
+                      <Row>
+                        <Text>{movie.info.rating}</Text>
+                      </Row>
+                      <Row>
+                        <Text>{movie.info.rank}</Text>
+                      </Row>
+                      <Row>
+                        <Text>
+                          {movie.info.directors &&
+                            movie.info.directors.join(", ")}
+                        </Text>
+                      </Row>
+                      <Row>
+                        <Text>
+                          {movie.info.actors && movie.info.actors.join(", ")}
+                        </Text>
+                      </Row>
+                    </Col>
+                  </Grid>
+                </Body>
+              </CardItem>
+            </Card>
+          </Content>
         )}
-      </View>
+      </Container>
     );
   }
 }
