@@ -15,11 +15,7 @@ import {
   Title
 } from "native-base";
 
-import {
-  getMovie,
-  createMovie,
-  updateMovie
-} from "src/movies/state/MoviesState";
+import { createMovie } from "src/movies/state/MoviesState";
 
 import Movie from "src/movies/model/Movie";
 
@@ -28,27 +24,16 @@ interface Props {
   isLoading?: boolean;
   disableEdit?: boolean;
 
-  getMovie: any;
   createMovie: any;
-  updateMovie: any;
 }
 
 interface State {
   movie?: Movie;
 }
 
-export class MoviesAddEdit extends Component<Props, State> {
-  year: number;
-  title: string;
-  mode: string;
-
+export class MoviesAdd extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
-    const { navigation } = this.props;
-    this.year = navigation.getParam("year", "");
-    this.title = navigation.getParam("title", "");
-    this.mode = navigation.getParam("mode", "");
 
     this.state = {
       movie: {
@@ -61,24 +46,6 @@ export class MoviesAddEdit extends Component<Props, State> {
         }
       }
     };
-  }
-
-  loadMovie() {
-    if (this.year && this.title) {
-      this.props
-        .getMovie({ year: this.year, title: this.title })
-        .then(result => {
-          this.setState({
-            movie: result.payload.data
-          });
-        });
-    }
-  }
-
-  componentDidMount() {
-    if (this.mode === "Edit") {
-      this.loadMovie();
-    }
   }
 
   onChangeText = (property, text) => {
@@ -99,7 +66,7 @@ export class MoviesAddEdit extends Component<Props, State> {
   };
 
   goToList = () => {
-    this.props.navigation.navigate("MoviesList", {});
+    this.props.navigation.navigate("MoviesList");
   };
 
   addMovie = () => {
@@ -120,34 +87,11 @@ export class MoviesAddEdit extends Component<Props, State> {
     });
   };
 
-  updateMovie = () => {
-    const movie = this.state.movie;
-
-    this.props.updateMovie(movie).then(result => {
-      Alert.alert(
-        "Success",
-        `Updated movie ${movie.title}.`,
-        [
-          {
-            text: "OK",
-            onPress: this.goToList
-          }
-        ],
-        { cancelable: false }
-      );
-    });
-  };
-
   onSave = () => {
-    if (this.mode === "Edit") {
-      this.updateMovie();
-    } else {
-      this.addMovie();
-    }
+    this.addMovie();
   };
 
   render() {
-    const mode = this.mode;
     const movie = this.state.movie;
     const { disableEdit } = this.props;
 
@@ -155,25 +99,19 @@ export class MoviesAddEdit extends Component<Props, State> {
       <Container>
         <Header>
           <Body>
-            {mode === "Edit" ? (
-              <Title>Edit {movie.title}</Title>
-            ) : (
-              <Title>Add Movie</Title>
-            )}
+            <Title>Add Movie</Title>
           </Body>
         </Header>
 
         <Content>
           <Form>
-            {mode !== "Edit" && (
-              <Item stackedLabel>
-                <Label>Title</Label>
-                <Input
-                  value={movie.title}
-                  onChangeText={this.onChangeText.bind(this, "movie.title")}
-                />
-              </Item>
-            )}
+            <Item stackedLabel>
+              <Label>Title</Label>
+              <Input
+                value={movie.title}
+                onChangeText={this.onChangeText.bind(this, "movie.title")}
+              />
+            </Item>
             <Item stackedLabel>
               <Label>Rating</Label>
               <Input
@@ -229,12 +167,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  getMovie,
-  createMovie,
-  updateMovie
+  createMovie
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MoviesAddEdit);
+)(MoviesAdd);

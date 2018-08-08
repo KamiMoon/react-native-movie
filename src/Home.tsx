@@ -49,7 +49,7 @@ export default class Home extends React.Component<Props> {
             rounded
             primary
             style={{ marginTop: 10 }}
-            onPress={() => navigate("MoviesAddEdit", { mode: "Add" })}
+            onPress={() => navigate("MoviesAdd")}
           >
             <Text>Add Movie</Text>
           </Button>

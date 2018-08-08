@@ -3,7 +3,8 @@ import { createStackNavigator } from "react-navigation";
 import Home from "src/Home";
 import MoviesList from "src/movies/components/list/MoviesList";
 import MoviesView from "src/movies/components/MoviesView";
-import MoviesAddEdit from "src/movies/components/MoviesAddEdit";
+import MoviesAdd from "src/movies/components/MoviesAdd";
+import MoviesEdit from "src/movies/components/MoviesEdit";
 import ExampleForm from "src/movies/ExampleForm";
 
 const Navigator = createStackNavigator(
@@ -11,7 +12,8 @@ const Navigator = createStackNavigator(
     Home: { screen: Home },
     MoviesList: { screen: MoviesList },
     MoviesView: { screen: MoviesView },
-    MoviesAddEdit: { screen: MoviesAddEdit },
+    MoviesAdd: { screen: MoviesAdd },
+    MoviesEdit: { screen: MoviesEdit },
     ExampleForm: { screen: ExampleForm }
   },
   {

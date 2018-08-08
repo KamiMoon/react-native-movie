@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import { FlatList, Alert } from "react-native";
+import { FlatList } from "react-native";
 import { connect } from "react-redux";
 
-import { queryMovies, deleteMovie } from "src/movies/state/MoviesState";
+import { queryMovies } from "src/movies/state/MoviesState";
 import MoviesListItem from "src/movies/components/list/MoviesListItem";
 import Movie from "src/movies/model/Movie";
 
 interface Props {
   navigation: any;
   queryMovies: any;
-  deleteMovie: any;
   movies: any;
   isLoading?: boolean;
   disableEdit?: boolean;
@@ -34,36 +33,8 @@ export class MoviesList extends Component<Props> {
     });
   };
 
-  deleteMovie = (movieToDelete: Movie) => {
-    this.props.deleteMovie(movieToDelete).then(result => {
-      Alert.alert(`${movieToDelete.title} successfully deleted`);
-    });
-  };
-
-  onDeleteItem = (movie: Movie) => {
-    Alert.alert(
-      "Warning",
-      `Are you sure you want to delete ${movie.title}?`,
-      [
-        {
-          text: "Yes",
-          onPress: () => {
-            this.deleteMovie(movie);
-          }
-        },
-        {
-          text: "No",
-          onPress: () => console.log("No Pressed"),
-          style: "cancel"
-        }
-      ],
-      { cancelable: true }
-    );
-  };
-
   onEditItem = (movie: Movie) => {
-    this.props.navigation.navigate("MoviesAddEdit", {
-      mode: "Edit",
+    this.props.navigation.navigate("MoviesEdit", {
       year: movie.year,
       title: movie.title
     });
@@ -74,7 +45,6 @@ export class MoviesList extends Component<Props> {
       movie={item}
       disableEdit={this.props.disableEdit}
       onPress={this.onPressItem}
-      onDelete={this.onDeleteItem}
       onEdit={this.onEditItem}
     />
   );
@@ -99,8 +69,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  queryMovies,
-  deleteMovie
+  queryMovies
 };
 
 export default connect(

@@ -1,9 +1,9 @@
 import React from "react";
-import { MoviesAddEdit } from "src/movies/components/MoviesAddEdit";
+import { MoviesEdit } from "src/movies/components/MoviesEdit";
 import { shallow } from "enzyme";
 import { getNavigationMock } from "tests/mocks";
 
-describe("MoviesAddEdit", () => {
+describe("MoviesEdit", () => {
   it("renders without crashing", () => {
     const props = {
       navigation: getNavigationMock(),
@@ -12,6 +12,6 @@ describe("MoviesAddEdit", () => {
       updateMovie: jest.fn()
     };
 
-    shallow(<MoviesAddEdit {...props} />);
+    shallow(<MoviesEdit {...props} />);
   });
 });
