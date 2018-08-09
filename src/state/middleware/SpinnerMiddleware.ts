@@ -5,6 +5,10 @@ import {
 
 //addon https://github.com/svrcekmichal/redux-axios-middleware
 export const spinnerMiddleware = store => next => action => {
+  if (action.type.startsWith("@@redux-form/")) {
+    return next(action);
+  }
+
   if (action.payload && !action.meta) {
     store.dispatch(showLoadingSpinner());
   } else if (action.payload && action.meta) {

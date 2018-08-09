@@ -11,9 +11,7 @@ import {
   Form
 } from "native-base";
 
-import { Field, InjectedFormProps, reduxForm } from "redux-form";
-
-import { renderInput } from "src/ui/form/Form";
+import { Field, InjectedFormProps, reduxForm, TextInput } from "src/ui/form";
 
 const validate = values => {
   const error: any = {};
@@ -58,8 +56,8 @@ class SimpleForm extends React.Component<Props & InjectedFormProps> {
         </Header>
         <Content padder>
           <Form>
-            <Field name="email" label="Email:" component={renderInput} />
-            <Field name="name" label="Name:" component={renderInput} />
+            <Field name="email" label="Email:" component={TextInput} />
+            <Field name="name" label="Name:" component={TextInput} />
           </Form>
           <Button
             block

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 export interface FeedbackType {
   title?: string;
@@ -25,9 +25,9 @@ export class Feedback extends Component<Props> {
     return (
       <View>
         {feedback && (
-          <View>
-            <Text>{feedback.title}</Text>
-            <Text>{feedback.msg}</Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>{feedback.title}</Text>
+            <Text style={styles.msg}>{feedback.msg}</Text>
           </View>
         )}
       </View>
@@ -40,3 +40,19 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(Feedback);
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: "#d6d7da"
+  },
+  title: {
+    fontSize: 19,
+    fontWeight: "bold",
+    color: "red"
+  },
+  msg: {
+    color: "red"
+  }
+});
