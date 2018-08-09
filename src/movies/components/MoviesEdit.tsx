@@ -55,7 +55,7 @@ export class MoviesEdit extends Component<
   };
 
   updateMovie = (movie: Movie) => {
-    this.props.updateMovie(movie).then(result => {
+    return this.props.updateMovie(movie).then(result => {
       Alert.alert(
         "Success",
         `Updated movie ${movie.title}.`,
