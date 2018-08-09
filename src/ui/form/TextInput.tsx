@@ -3,7 +3,7 @@ import React from "react";
 import { Item, Input, Text, Label, View } from "native-base";
 
 export const TextInput = ({
-  input: { onChange },
+  input: { onChange, value, ...restInput },
   label,
   type,
   meta: { touched, error, warning },
@@ -19,7 +19,12 @@ export const TextInput = ({
       <Item stackedLabel error={hasError}>
         <Label>{label}</Label>
 
-        <Input onChangeText={onChange} {...rest} />
+        <Input
+          onChangeText={onChange}
+          value={String(value)}
+          {...restInput}
+          {...rest}
+        />
       </Item>
       {touched &&
         ((error && <Text style={{ color: "red" }}>{error}</Text>) ||

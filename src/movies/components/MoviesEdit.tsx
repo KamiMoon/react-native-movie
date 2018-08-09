@@ -8,53 +8,41 @@ import {
   Header,
   Content,
   Form,
-  Item,
-  Input,
-  Label,
   Text,
   Title
 } from "native-base";
+import {
+  Field,
+  InjectedFormProps,
+  reduxForm,
+  TextInput,
+  pFloat,
+  pInt,
+  vInt,
+  vFloat
+} from "src/ui/form";
+import Feedback from "src/ui/feedback/Feedback";
 
 import { getMovie, updateMovie } from "src/movies/state/MoviesState";
-
 import Movie from "src/movies/model/Movie";
 
 interface Props {
   navigation: any;
-  isLoading?: boolean;
-  disableEdit?: boolean;
-
   getMovie: any;
   updateMovie: any;
+  movie: Movie;
 }
 
-interface State {
-  movie?: Movie;
-}
-
-export class MoviesEdit extends Component<Props, State> {
-  year: number;
-  title: string;
-
-  constructor(props: Props) {
-    super(props);
-
-    const { navigation } = this.props;
-    this.year = navigation.getParam("year", "");
-    this.title = navigation.getParam("title", "");
-
-    this.state = {};
-  }
-
+export class MoviesEdit extends Component<
+  Props & InjectedFormProps<any, Props>
+> {
   loadMovie() {
-    if (this.year && this.title) {
-      this.props
-        .getMovie({ year: this.year, title: this.title })
-        .then(result => {
-          this.setState({
-            movie: result.payload.data
-          });
-        });
+    const { navigation } = this.props;
+    const year = navigation.getParam("year", "");
+    const title = navigation.getParam("title", "");
+
+    if (year && title) {
+      this.props.getMovie({ year: year, title: title });
     }
   }
 
@@ -62,30 +50,11 @@ export class MoviesEdit extends Component<Props, State> {
     this.loadMovie();
   }
 
-  onChangeText = (property, text) => {
-    const newState = { ...this.state };
-
-    const properties = property.split(".");
-
-    //TOOD: better
-    if (properties.length === 2) {
-      newState[properties[0]][properties[1]] = text;
-    } else if (properties.length === 3) {
-      newState[properties[0]][properties[1]][properties[2]] = text;
-    }
-
-    this.setState(newState, () => {
-      console.log(this.state);
-    });
-  };
-
   goToList = () => {
     this.props.navigation.navigate("MoviesList", {});
   };
 
-  updateMovie = () => {
-    const movie = this.state.movie;
-
+  updateMovie = (movie: Movie) => {
     this.props.updateMovie(movie).then(result => {
       Alert.alert(
         "Success",
@@ -101,13 +70,12 @@ export class MoviesEdit extends Component<Props, State> {
     });
   };
 
-  onSave = () => {
-    this.updateMovie();
+  onSave = values => {
+    return this.updateMovie({ ...values.movie });
   };
 
   render() {
-    const movie = this.state.movie;
-    const { disableEdit } = this.props;
+    const { handleSubmit, submitting, movie } = this.props;
 
     return (
       <Container>
@@ -118,45 +86,38 @@ export class MoviesEdit extends Component<Props, State> {
         {movie ? (
           <Content>
             <Form>
-              <Item stackedLabel>
-                <Label>Rating</Label>
-                <Input
-                  keyboardType="numeric"
-                  value={"" + movie.info.rating}
-                  onChangeText={text => {
-                    //TODO: this is bad
-                    const converted = parseFloat(text) || 0.0;
-                    this.onChangeText("movie.info.rating", converted);
-                  }}
-                />
-              </Item>
-              <Item stackedLabel>
-                <Label>Plot</Label>
-                <Input
-                  value={movie.info.plot}
-                  multiline={true}
-                  numberOfLines={4}
-                  onChangeText={this.onChangeText.bind(this, "movie.info.plot")}
-                />
-              </Item>
-              <Item stackedLabel>
-                <Label>Rank</Label>
-                <Input
-                  keyboardType="numeric"
-                  value={"" + movie.info.rank}
-                  onChangeText={text => {
-                    //TODO: this is bad
-                    const converted = parseInt(text, 10) || 0;
-                    this.onChangeText("movie.info.rank", converted);
-                  }}
-                />
-              </Item>
+              <Field
+                name="movie.info.rating"
+                label="Rating:"
+                keyboardType="numeric"
+                component={TextInput}
+                parse={pFloat}
+                validate={[vInt]}
+              />
+              <Field
+                name="movie.info.plot"
+                label="Plot:"
+                multiline={true}
+                numberOfLines={4}
+                component={TextInput}
+              />
+              <Field
+                name="movie.info.rank"
+                label="Rank:"
+                keyboardType="numeric"
+                component={TextInput}
+                parse={pInt}
+                validate={[vFloat]}
+              />
             </Form>
+
+            <Feedback />
+
             <Button
               block
               style={{ margin: 15, marginTop: 50 }}
-              onPress={this.onSave}
-              disabled={disableEdit}
+              onPress={handleSubmit(this.onSave)}
+              disabled={submitting}
             >
               <Text>Save</Text>
             </Button>
@@ -169,9 +130,14 @@ export class MoviesEdit extends Component<Props, State> {
   }
 }
 
+const MoviesEditForm = reduxForm({
+  form: "MoviesEdit"
+})(MoviesEdit);
+
 const mapStateToProps = state => {
   return {
-    ...state.movies
+    initialValues: state.movies.movie ? { movie: state.movies.movie } : null,
+    movie: state.movies.movie
   };
 };
 
@@ -183,4 +149,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MoviesEdit);
+)(MoviesEditForm);
