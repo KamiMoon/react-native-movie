@@ -38,3 +38,12 @@ Home
 Search
 Favorites
 Profile
+
+
+
+
+
+LIST gets blocked if ohter page or any ajax fails
+
+
+validation for int is wrong - allows 6.5
